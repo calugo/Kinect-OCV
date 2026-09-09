@@ -31,35 +31,8 @@ def kin_init():
 
     pipeline = OpenGLPacketPipeline()
     print("Kinect using OpenGL pipeline")
- #   except:
- #       pipeline = CpuPacketPipeline()
- #       print("Kinect using CPU pipeline")
+
     return fn, pipeline 
-
-def compute_moments(arr):
-    arrx = arr
-    Sn=np.sum(arrx)
-    Sx = 0.0 
-    Sy = 0.0
-    Sxx = 0.0
-    Syy = 0.0
-        
-    if Sn >0:
-        Nx=arr.shape[0];Ny=arr.shape[1]
-    
-        for q in range(Nx):
-            for p in range(Ny):
-                Sx+=p*arrx[q,p]
-                Sxx+=p*p*arrx[q,p]
-            
-                Sy+=q*arrx[q,p]
-                Syy+=q*q*arrx[q,p]
-    
-        Sx = Sx/Sn 
-        Sy = Sy/Sn
-
-    return Sn, Sx, Sy, Sxx, Syy
-
 
 def main():
 
@@ -105,27 +78,28 @@ def main():
         depth = frames["depth"].asarray()
         listener.release(frames)
         depth1 = (depth).astype(cv.numpy.uint8)
-        depth1 = cv.applyColorMap(depth1, cv.COLORMAP_BONE) 
+        depth1 = cv.applyColorMap(depth1, cv.COLORMAP_BONE)
 
-#        #Step 1 RAW
+        #Get the raw data and calculate the region of interest
+        #data
+
+        #Step 1: raw depth data
         Po = np.array([Xo,Yo])
         Dp = np.array([nw,nh])
         cv.rectangle(depth1,Po,Po+Dp,(2550,0),1)
         cv.imshow('Depth',depth1)
-
+        
+        #Step 2: Calculate the roi data with the cutoff value
         roidepth = depth[Yo:Yo+nh,Xo:Xo+nw].copy()
         roidepth[roidepth >cutoff]=0.0
         A = roidepth > 0
         roidepth[A]=25*Nmax/roidepth[A]
 
-        Sn, rx, ry, rxx, ryy = compute_moments(roidepth)
-
         wn = (roidepth).astype(cv.numpy.uint8)
         wn = cv.applyColorMap(wn, cv.COLORMAP_JET) 
         cv.imshow('Roi',wn)
 
-        #Step 2 ZERO TO INF
-
+        #ESC to quit
         if cv.waitKey(10) == 27:
             break
 
