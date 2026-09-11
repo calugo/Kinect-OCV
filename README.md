@@ -11,7 +11,7 @@ The notebook `3DRENDERS.ipynb` contains a small set of interactve cv2 filters to
 
 ![Hand Render](renders/hand.gif)
 
-A full tutorial on hardware and software about this project can be found [here](https://www.hackster.io/kupkasmale/super-cheap-3d-scanner-camera-controller-b1ff81)
+A full tutorial on the hardware setup and about using `blog_pi.py` can be found [here](https://www.hackster.io/kupkasmale/super-cheap-3d-scanner-camera-controller-b1ff81)
 
-
+For the mesh rendering, a tutorial alongside a brief set of real time interactive rendering views, can be found [here](https://calugo.github.io/posts/3d-fun-with-kinect-and-pyvista/)
 
